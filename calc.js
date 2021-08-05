@@ -108,7 +108,7 @@ function changeDisplay(a){
                   //if the current number being displayed is 6 or greater characters in length
                   //it gets converted to exponential form before being displayed
                   currentDisplay = parseFloat(currentDisplay);
-                   if(currentDisplay > 10 ** 20){
+                   if(currentDisplay > 10 ** 20 || currentDisplay < -1 * 10 ** 10){
                 
                    currentDisplay = "Too Big";
                 
