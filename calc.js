@@ -73,43 +73,87 @@ function changeDisplay(a){
   //a is a placeholder for input arguments to be concatenated or changing signs
 
   let potentialDisplay;
-  a = parseFloat(a);
+  
   
   a = a.toString();
-  
+  console.log(nonInput);
   
     //if nonInput is true, the current display is being changed and not added to
     if(nonInput == true){
       potentialDisplay = a;
+      console.log(potentialDisplay);
       if(potentialDisplay.length >= 6){
         potentialDisplay = parseFloat(potentialDisplay);
+        if(potentialDisplay < 10 ** 99 || potentialDisplay < -1 * (10 ** 99)){
         potentialDisplay = potentialDisplay.toExponential(2);
         potentialDisplay = potentialDisplay.toString();
-        console.log(potentialDisplay);
+        }
+        else{
+          potentialDisplay = "Infinity";
+        }
         currentDisplay = potentialDisplay;
       }
       else{
       currentDisplay = potentialDisplay;
+      
       }
     }
     //nonInput being false indicates concatenation 
     else if(nonInput == false){
-      if(currentDisplay.length >=6){
-        //if the current number being displayed is 6 or greater characters in length
-        //it gets converted to exponential form before being displayed
-        currentDisplay += a;
-        currentDisplay = parseFloat(currentDisplay);
-        currentDisplay = currentDisplay.toExponential(2).toString();
+        if(currentDisplay != "Too Big"){
+          
+            if(currentDisplay.length >= 6){
+              if(currentDisplay.includes(".") == false){
+                if(a.includes(".") == false){
+                  //if the current number being displayed is 6 or greater characters in length
+                  //it gets converted to exponential form before being displayed
+                  currentDisplay = parseFloat(currentDisplay);
+                   if(currentDisplay > 10 ** 20){
+                
+                   currentDisplay = "Too Big";
+                
+                  }
+                 
+                  else{
+                  currentDisplay = currentDisplay.toString();
+                  currentDisplay += a;
+                  currentDisplay = parseFloat(currentDisplay);
+                  currentDisplay = currentDisplay.toExponential(2).toString();
+                  }
+                  
+                }
+                
+              }
+
+              
+              
+            }
+          else{
+            if(currentDisplay.includes(".") == false){
+              currentDisplay += a;
+             }
+             else{
+               if(a.includes(".") == false){
+                 currentDisplay += a;
+               }
+             }
+          }
+        
+        
+        
         
       }
-      else{
-        currentDisplay += a;
-      }
+    else{
+      currentDisplay = a;
+    }
 
     }
   
-  
+    //console.log(currentDisplay);
     displayb.innerHTML = currentDisplay;
+  
+ 
+  
   };
 
 
@@ -197,6 +241,7 @@ resetb.addEventListener("click", function() {
     divisionFlag = false;
     additionFlag = false;
     subtractionFlag = false;
+    percentageFlag = false;
     checkPressed();
 
 } );
@@ -208,15 +253,18 @@ zerob.addEventListener("click", function() {
     divisionFlag = false;
     additionFlag = false;
     subtractionFlag = false;
+    percentageFlag = false;
 } );
 decimalPointb.addEventListener("click", function() {
   console.log(nonInput);
-  nonInput = false;
+  
   changeDisplay(".");
+  nonInput = false;
   multiplicationFlag = false;
   divisionFlag = false;
   additionFlag = false;
   subtractionFlag = false;
+  percentageFlag = false;
 } );
 
 
@@ -226,8 +274,9 @@ multiplyb.addEventListener("click", function() {
     //converts the current display to a number from a string
     currentDisplay = parseFloat(currentDisplay);
     //the if else statement helps determine if any of the buttons has been pressed
-    if(multiplicationFlag == true || divisionFlag == true ||
-       additionFlag == true || subtractionFlag == true || percentageFlag == true){
+    
+     if(multiplicationFlag == true || divisionFlag == true ||
+       additionFlag == true || subtractionFlag == true){
         
         //if any of the flags are true, the second input is inputted from
          //the current display
@@ -239,6 +288,9 @@ multiplyb.addEventListener("click", function() {
         
     }
     
+    else if(percentageFlag == true){
+      input1 = currentDisplay;
+    }
     else{
       //if none of the flags are tripped, the first input is set from the display
       input1 = currentDisplay;
@@ -253,11 +305,14 @@ divideb.addEventListener("click", function() {
  
   currentDisplay = parseFloat(currentDisplay);
   if(multiplicationFlag == true || divisionFlag == true ||
-     additionFlag == true || subtractionFlag == true || percentageFlag == true){
+     additionFlag == true || subtractionFlag == true ){
       input2 = currentDisplay;
       pickOperation();
       currentDisplay = parseFloat(currentDisplay);
       input1 = currentDisplay;
+  }
+  else if(percentageFlag == true){
+    input1 = currentDisplay;
   }
   else{
     input1 = currentDisplay;
@@ -272,13 +327,16 @@ addb.addEventListener("click", function() {
  
   currentDisplay = parseFloat(currentDisplay);
   if(multiplicationFlag == true || divisionFlag == true ||
-     additionFlag == true || subtractionFlag == true || percentageFlag == true){
+     additionFlag == true || subtractionFlag == true ){
      
       input2 = currentDisplay;
       pickOperation();
       currentDisplay = parseFloat(currentDisplay);
       input1 = currentDisplay;
       
+  }
+  else if(percentageFlag == true){
+    input1 = currentDisplay;
   }
   else{
     input1 = currentDisplay;
@@ -293,13 +351,16 @@ subtractb.addEventListener("click", function() {
  
   currentDisplay = parseFloat(currentDisplay);
   if(multiplicationFlag == true || divisionFlag == true ||
-     additionFlag == true || subtractionFlag == true || percentageFlag == true){
+     additionFlag == true || subtractionFlag == true ){
       
       input2 = currentDisplay;
       pickOperation();
       currentDisplay = parseFloat(currentDisplay);
       input1 = currentDisplay;
       
+  }
+  else if(percentageFlag == true){
+    input1 = currentDisplay;
   }
   else{
     input1 = currentDisplay;
@@ -317,8 +378,7 @@ equalsb.addEventListener("click", function() {
       
       input2 = currentDisplay;
       pickOperation();
-      currentDisplay = parseFloat(currentDisplay);
-      input1 = currentDisplay;
+      
       
   }
   
@@ -332,34 +392,38 @@ equalsb.addEventListener("click", function() {
 
 
 percentb.addEventListener("click", function() {
-  let potentialNumber = parseFloat(currentDisplay);
-  potentialNumber = potentialNumber * 0.1;
-  nonInput = true;
+  
 
+  
+  currentDisplay = parseFloat(currentDisplay);
   if(multiplicationFlag == true || divisionFlag == true ||
     additionFlag == true || subtractionFlag == true || percentageFlag == true){
-      input1 = currentDisplay;
+      
       pickOperation();
       currentDisplay = parseFloat(currentDisplay);
       input1 = currentDisplay;
   }
-    
-  else {
-    changeDisplay(potentialNumber);
+  else{
+    input1 = currentDisplay;
   }
+    
+  percentageFlag = true;
+  nonInput = true;
   checkPressed();
 } );
 
 plusMinusb.addEventListener("click", function(){
-  currentDisplay = parseFloat(currentDisplay);
-  currentDisplay = currentDisplay * -1;
-  currentDisplay.toString;
-  displayb.innerHTML = currentDisplay;
+  nonInput = true;
+  potentialNumber = parseFloat(currentDisplay);
+  potentialNumber = potentialNumber * -1;
+  potentialNumber.toString();
+  changeDisplay(potentialNumber);
   nonInput = false;
   multiplicationFlag = false;
   divisionFlag = false;
   additionFlag = false;
   subtractionFlag = false;
+  percentageFlag = false;
 
 })
 
